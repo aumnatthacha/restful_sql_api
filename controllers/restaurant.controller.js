@@ -12,4 +12,21 @@ Restaurant.createRestaurant = async (newRestaurant) => {
     }
 }
 
+//get
+Restaurant.getAllRestaurant = async () => {
+    try {
+        const allRestaurant = await Restaurant.getAllRestaurant({});
+        console.log("all restaurant:", allRestaurant.map((restaurant) => restaurant.toJSON()));
+        return allRestaurant.map((restaurant) => restaurant.toJSON());
+    } catch (error) {
+        console.log("err", error);
+        throw error;
+    }
+};
+
+
+
+
+
+
 module.exports = Restaurant;
