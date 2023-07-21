@@ -14,15 +14,15 @@ router.post("/re", async (req, res) => {
     }
 
 });
-
-router.get("/res", async (req, res) => {
-  try {
-      const allRestaurant = await Restaurant.getAllRestaurant();
-      res.status(200).json(allRestaurant);
-  } catch (error) {
-      res.status(500).json({ error: "ผิดพลาด" });
-  }
-});
+//get
+// router.get("/res", async (req, res) => {
+//   try {
+//       const allRestaurant = await Restaurant.getAllRestaurant();
+//       res.status(200).json(allRestaurant);
+//   } catch (error) {
+//       res.status(500).json({ error: "ผิดพลาด" });
+//   }
+// });
 
 
 
