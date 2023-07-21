@@ -3,6 +3,7 @@ const router = express.Router();
 const Restaurant = require("../controllers/restaurant.controller")
 
 //Create a new restaurant
+//http://localhost:5000/res
 router.post("/re", async (req, res) => {
     try {
         const newRestaurant = req.body;
