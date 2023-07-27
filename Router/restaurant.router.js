@@ -4,7 +4,7 @@ const Restaurant = require("../controllers/restaurant.controller")
 
 //Create a new restaurant
 //http://localhost:5000/res
-router.post("/re", async (req, res) => {
+router.post("/res", async (req, res) => {
     try {
         const newRestaurant = req.body;
         const createRestaurant = await Restaurant.createRestaurant(newRestaurant);
@@ -51,7 +51,7 @@ router.put("/res/:id", async (req, res) => {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
-        res.status(201).json(restaurant);
+        res.status(201).json({ message : "updates"});
     } catch (error) {
         res.status(500).json({ error: "Failed to update restaurant by ID" });
     }
@@ -67,7 +67,7 @@ router.delete("/res/:id", async (req, res) => {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
-        res.status(200).json({ message : "Delete"});
+        res.status(200).json({ message : "Delete"}); //
     } catch (error) {
         res.status(500).json({ error: "Failed to delete restaurant by ID" });
     }

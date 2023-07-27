@@ -12,7 +12,8 @@ Restaurant.createRestaurant = async (newRestaurant) => {
     }
 }
 
-//get
+//get All Restaurant
+// .map = loop ข้อมูลใน Array
 Restaurant.getAll = async () => {
     try {
         const allRestaurant = await Restaurant.findAll({}); // สมมุติว่าคุณใช้ Mongoose ในการเชื่อมต่อกับฐานข้อมูล
