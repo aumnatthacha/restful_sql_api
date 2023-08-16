@@ -1,7 +1,6 @@
 # controllers
 **Restaurant**
 - restaurant.controller.js
-
   - Import Model:
     โค้ดเริ่มต้นด้วยการ import Restaurant model ที่อยู่ในไฟล์ restaurant.model ซึ่งมีไว้สำหรับการเชื่อมต่อและจัดการกับข้อมูลร้านอาหารในฐานข้อมูล.
 
