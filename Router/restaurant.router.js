@@ -1,137 +1,77 @@
 const express = require("express");
 const router = express.Router();
-const Restaurant = require("../model/restaurant.model");
+const Restaurant = require("../controllers/restaurant.controller")
 
-const conSql = require("../model/db");
-//Insert restaurant to database
-router.post("/restaurant", (req, res) => {
-    const newRestaurant = new Restaurant({
-        name: req.body.name,
-        type: req.body.type,
-        img: req.body.img
-    })
+//Create a new restaurant
+//http://localhost:5000/res
+router.post("/res", async (req, res) => {
+    try {
+        const newRestaurant = req.body;
+        const createRestaurant = await Restaurant.createRestaurant(newRestaurant);
+        res.status(201).json(createRestaurant)
+    } catch (err) {
+        res.status(500).json({ error: "Failed to create restaurant" });
 
-    //
-    Restaurant.create(newRestaurant, (err, data) => {
-        if (err) {
-            res.status(500).send({
-                message: err.message || "Some error occured while inserting the new restaurant"
-            })
-        } else {
-            res.send(data);
-        }
-    })
-})
+    }
 
-//Get All
-router.get("/restaurant", (req, res) => {
-    Restaurant.getAll((err, data) => {
-        if (err) {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occured while inserting the new restaurant"
-            });
-        } else {
-            res.send(data);
-        }
-    })
-})
-
-//Get restaurant by id
-router.get("/restaurant/:id", (req, res) => {
-    const restaurantId = Number.parseInt(req.params.id);
-    Restaurant.getById(restaurantId, (err, data) => {
-        if (err) {
-            if (err.kind === "nod_found") {
-                res.status(400).send({
-                    message: "Restaurant not found with this id" + restaurant
-
-                }
-                )
-            } else {
-                res.status(500).send({
-                    message:
-                        err.message || "Some error occured while inserting the new restaurant"
-                });
-            }
-        } else {
-            res.send(data);
-        }
-    })
+});
+//get
+router.get("/res", async (req, res) => {
+    try {
+        const allRestaurant = await Restaurant.getAll();
+        res.status(200).json(allRestaurant);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to get restaurants" });
+    }
 });
 
-
-//
-router.delete("/restaurant/:id", (req, res) => {
-    const restaurantId = Number.parseInt(req.params.id);
-    Restaurant.deleteById(restaurantId, (err, data) => {
-        if (err) {
-            if (err.kind === "not_found") {
-                res.status(400).send({
-                    message: "Restaurant not found with this id: " + reId
-                });
-            } else {
-                res.status(500).send({
-                    message: err.message || "Some error occurred while deleting the restaurant."
-                });
-            }
-        } else {
-            res.send({ message: "Restaurant deleted successfully." });
+//get byId
+router.get("/res/:id", async (req, res) => {
+    try {
+        const restaurantId = req.params.id;
+        const restaurant = await Restaurant.getOne(restaurantId);
+        
+        if (!restaurant) {
+            return res.status(404).json({ error: "Restaurant not found" });
         }
-    });
+
+        res.status(200).json(restaurant);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to get restaurant by ID" });
+    }
 });
 
 //update
-router.put("/restaurant/:id", (req, res) => {
-    const restaurantId = Number.parseInt(req.params.id);
-    if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
-        res.status(400).send({
-            message: "Attributes can not be empty!"
-        })
-    }
-    // UPDATE `re` SET `name` = 'KFC_1', `type` = 'ไก่อร่อย_1', `img` = '' WHERE `re`.`id` = 8;
-    conSql.query(" UPDATE re SET name = ?, type=?, img = ?  WHERE re.id = ? ",
-        [req.body.name, req.body.type, req.body.img, restaurantId],
-        (err, result) => {
-            if (err) {
-                // console.log(res);
-                // result(err, null)
-                res.status(400).json({ message: err.stack})
-            }
-            if (result.affectedRows === 0) {
-                // result({ kind: "not_found" }, null)
-                // result;
-                res.status(400).json({ message: 'not found id ' + restaurantId })
-
-            }
-            res.status(200).json({message:result.message})
+router.put("/res/:id", async (req, res) => {
+    try {
+        const restaurantId = req.params.id;
+        const updates = req.body;
+        const restaurant = await Restaurant.updateTable(restaurantId, updates);
+        if (!restaurant) {
+            return res.status(404).json({ error: "Restaurant not found" });
         }
-    );
-    // const newRestaurant = new Restaurant({
-    //     name: req.body.name,
-    //     type: req.body.type,
-    //     img: req.body.img
-    // })
 
-    // Restaurant.updateById(restaurantId, newRestaurant, (err, data)=>{
-    //     if(err){
-    //         if(err.kind === "not_found"){
-    //             res.status(400).send({
-    //                 message: "Restaurant not found with this id: " + restaurantId
-    //             });
-    //         }else{
-    //             res.status(500).send({
-    //                 message: 
-    //                 err.message || "Some error occurred while deleting the restaurant."
-    //             });
-    //         }
-    //     }else{
-    //         res.status(200).send(data);
-    //     }
-    // })
-})
+        res.status(201).json({ message : "updates"});
+    } catch (error) {
+        res.status(500).json({ error: "Failed to update restaurant by ID" });
+    }
+});
 
+//delete
+router.delete("/res/:id", async (req, res) => {
+    try {
+        const restaurantId = req.params.id;
+        const deletedRestaurant = await Restaurant.Delete(restaurantId);
 
+        if (!deletedRestaurant) {
+            return res.status(404).json({ error: "Restaurant not found" });
+        }
+
+        res.status(200).json({ message : "Delete"}); //
+    } catch (error) {
+        res.status(500).json({ error: "Failed to delete restaurant by ID" });
+    }
+});
 
 
 module.exports = router;
